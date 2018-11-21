@@ -7,14 +7,38 @@
 <main class="main-container">
 <h1>Update Pet Form</h1>
 <?php
+    $db_server = mysql_connect('localhost', 'ethan', 'kokoko345543!');
+    if(!$db_server)
+        die("Unable to connect to MySQL: " . mysql_error());
+    if(!mysql_select_db('ethan_VET'))
+        die('Unable to select database: ' . mysql_error());
+    $query = "SELECT * FROM PET_OWNER";
+
+    $result = mysql_query($query);
+    if(!result)
+        die("Unable to execute query: " . mysql_error());
+    
+    echo "<table border=\"1\">";
+    echo "<tr><th>OwnerID</th><th>OwnerLastName</th><th>OwnerFirstName</th><th>OwnerPhone</th><th>OwnerEmail</th></tr>\n";
+
+    $rows = mysql_num_rows($result);
+    for($r = 0; $r < $rows; $r++){
+        echo "<tr>";
+        for($c = 0; $c < 5; $c++){
+            echo "<td>" . mysql_result($result, $r, $c) . "</td>";
+        }
+        echo "</tr>\n";
+    }
+    echo "</table>\n";
+?>
+<?php
 if(isset($_GET['ownerid'])){
     $db_server = mysql_connect('localhost', 'ethan', 'kokoko345543!');
     if(!$db_server)
         die("Unable to connect to MySQL: " . mysql_error());
-    if(!$mysql_db_select('ethan_VET'))
+    if(!mysql_select_db('ethan_VET'))
         die("Unable to select database: " . mysql_error());
     $owner_id = $_GET['ownerid'];
-    $new_id = $_GET['newid'];
     $new_first_name = $_GET['newfirstname'];
     $new_last_name = $_GET['newlastname'];
     $new_phone = $_GET['newphone'];
@@ -27,12 +51,7 @@ if(isset($_GET['ownerid'])){
     $count = 0;
     //Instantiate Query variable
     $query = "UPDATE PET_OWNER SET ";
-    if($new_id != ""){
-        $query .= "OwnerId=$new_id";
-        $count++;
-    }
     if($new_last_name != ""){
-        if($count > 0) $query .= ", ";
         $query .= "OwnerLastName='$new_last_name'";
         $count++;
     }
@@ -48,10 +67,9 @@ if(isset($_GET['ownerid'])){
     }
     if($new_email != ""){
         if($count > 0) $query .= ", ";
-        $query .= "OwnerEmail=$new_email";
-        $count++;
+        $query .= "OwnerEmail='$new_email'";
     }
-    $query .= " WHERE OwnerID = '$owner_id'";
+    $query .= " WHERE OwnerID= '$owner_id'";
     echo "<p>Debug SQL Query:  " . $query . "</p>";
 
     //Execute Query
@@ -65,7 +83,7 @@ if(isset($_GET['ownerid'])){
 <form action="updateowner.php" method="get">
     <p>Enter Owner ID to Select the Owner:</p>
     <input type="text" name="ownerid">
-    <p>New ID: <input type="text" name="newid"></p>
+    <p>Enter one or more fields to update database:</p>
     <p>New First Name: <input type="text" name="newfirstname"></p>
     <p>New Last Name: <input type="text" name="newlastname"></p>
     <p>New Phone: <input type="text" name="newphone"></p>
