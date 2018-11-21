@@ -1,17 +1,50 @@
 <html>
 <head>
-    <title>Update Pet</title>
+    <title>Update Pet Information</title>
     <link rel="stylesheet" href="Assets/styles.css">
 </head>
 <body>
 <main class="main-container">
-<h1>Update Pet Form</h1>
+<?php
+    echo "<h1>Update Pet Information Form</h1>";
+?>
+<?php
+    $db_server = mysql_connect('localhost', 'ethan', 'kokoko345543!');
+    if(!$db_server)
+        die("Unable to connect to MySQL: " . mysql_error());
+
+    if(!mysql_select_db('ethan_VET'))
+        die("Unable to select a database: " . mysql_error());
+
+    $query = "SELECT PetName, PetType, PetBreed, OwnerFirstName, OwnerLastName
+    FROM PET, PET_OWNER
+    WHERE PET.OwnerID = PET_OWNER.OwnerID";
+
+    $result = mysql_query($query);
+    if(!$result)
+        die("Unable to execute query: " . mysql_error());
+
+    echo "<table border=\"1\">";
+    echo "<tr><th>Pet</th><th>Type</th><th>Breed</th><th>First</th><th>Last</th></tr>\n";
+
+    $rows = mysql_num_rows($result);
+    for($r = 0; $r < $rows; $r++){
+        echo "<tr>";
+        for($c = 0; $c < 5; $c++){
+            echo "<td>" . mysql_result($result, $r, $c) . "</td>";
+        }
+        echo "</tr>\n";
+    }
+    echo "</table>\n";
+
+    mysql_close($db_server);
+?>
 <?php
 if(isset($_GET['petname'])){
     $db_server = mysql_connect('localhost', 'ethan', 'kokoko345543!');
     if(!$db_server)
         die("Unable to connect to MySQL: " . mysql_error());
-    if(!$mysql_db_select('ethan_VET'))
+    if(!mysql_select_db('ethan_VET'))
         die("Unable to select database: " . mysql_error());
     $pet_name = $_GET['petname'];
     $new_name = $_GET['newname'];
@@ -38,7 +71,7 @@ if(isset($_GET['petname'])){
     }
     if($new_breed != ""){
         if($count > 0) $query .= ", ";
-        $query .= "PetBreed='$new_breed;";
+        $query .= "PetBreed='$new_breed'";
         $count++;
     }
     if($new_dob != ""){
@@ -49,9 +82,8 @@ if(isset($_GET['petname'])){
     if($new_owner != ""){
         if($count > 0) $query .= ", ";
         $query .= "OwnerID=$new_owner";
-        $count++;
     }
-    $query .= " WHERE PetName = '$pet_name'";
+    $query .= " WHERE PetName= '$pet_name'";
     echo "<p>Debug SQL Query:  " . $query . "</p>";
 
     //Execute Query
@@ -74,7 +106,7 @@ if(isset($_GET['petname'])){
 </form>
 
 <p><a href="petlist.php">List Current Pets</a></p>
-<p><a href="updatepet.php">Update Pet (Blank Form)</a></p>
+<p><a href="updatepet.php">Refresh Table on Current Page</a></p>
 <p><a href="../index.html">Back to Home</a></p>
 </main>
 </body>
