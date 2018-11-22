@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Remove Project Form</title>
+    <title>Remove Publisher Form</title>
     <link rel="stylesheet" href="Assets/styles.css">
 </head>
 <body>
