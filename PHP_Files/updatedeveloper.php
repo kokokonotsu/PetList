@@ -1,12 +1,12 @@
 <html>
 <head>
-    <title>Update Publisher Form</title>
+    <title>Update Developer Form</title>
     <link rel="stylesheet" href="Assets/styles.css">
 </head>
 <body>
 <main class="main-container">
 <?php
-    echo "<h1>Update Publisher Information Form</h1>";
+    echo "<h1>Update Developer Information Form</h1>";
 ?>
 <?php
     $db_server = mysql_connect('localhost', 'ethan', 'kokoko345543!');
@@ -14,14 +14,14 @@
         die("Unable to connect to MySQL: " . mysql_error());
     if(!mysql_select_db('ethan_RYO'))
         die('Unable to select database: ' . mysql_error());
-    $query = "SELECT * FROM GAME_PROJECT";
+    $query = "SELECT * FROM DEVELOPER";
 
     $result = mysql_query($query);
     if(!result)
         die("Unable to execute query: " . mysql_error());
     
     echo "<table border=\"1\">";
-    echo "<tr><th>PublisherName</th><th>DeveloperName</th><th>StartDate</th><th>EndDate</th></tr>\n";
+    echo "<tr><th>DeveloperName</th><th>Location</th><th>Employees</th><th>PublisherName</th></tr>\n";
 
     $rows = mysql_num_rows($result);
     for($r = 0; $r < $rows; $r++){
@@ -34,7 +34,7 @@
     echo "</table>\n";
 ?>
 <?php
-if (isset($_GET['publishername']))
+if (isset($_GET['developername']))
 {
     //Connect to Server
     $db_server = mysql_connect('localhost', 'ethan', 'kokoko345543!');
@@ -44,19 +44,20 @@ if (isset($_GET['publishername']))
     if(!mysql_select_db('ethan_RYO'))
         die("Unable to select database: " . mysql_error());
 
-    $publisher_name = $_GET['publishername'];
-    $new_publisher_name = $_GET['newpublishername'];
+    $developer_name = $_GET['developername'];
+    $new_developer_name = $_GET['newdevelopername'];
     $new_location = $_GET['newlocation'];
     $new_employees = $_GET['newemployees'];
+    $new_publisher = $_GET['newpublisher'];
 
     //Build SQL Query
     //Update Fields entered on the Form
     //Include commas to separate the fields
     //Initialize Query Counter
     $count = 0;
-    $query = "UPDATE PUBLISHER SET ";
-    if ($new_publisher_name != "") {
-        $query .= "PublisherName='$new_publisher_name'";
+    $query = "UPDATE DEVELOPER SET ";
+    if ($new_developer_name != "") {
+        $query .= "DeveloperName='$new_developer_name'";
         $count++;
     }
     if ($new_location != "") {
@@ -67,8 +68,13 @@ if (isset($_GET['publishername']))
     if ($new_employees != "") {
         if ($count > 0) $query .= ", ";
         $query .= "Employees=$new_employees";
+        $count++;
     }
-    $query .= " WHERE PublisherName= '$publisher_name'";
+    if($new_publisher != ""){
+        if($count > 0) $query .= ", ";
+        $query .= "PublisherName='$new_publisher'";
+    }
+    $query .= " WHERE DeveloperName= '$developer_name'";
     echo "<p>Debug SQL Query:  " . $query . "</p>";
 
     //Execute Query
@@ -79,18 +85,19 @@ if (isset($_GET['publishername']))
     mysql_close($db_server);
 }
 ?>
-<form action="updatepublisher.php" method="get">
-    <p>Enter Publisher Name to Select Publisher:</p>
-    <p><input type="text" name="publishername"></p>
+<form action="updatedeveloper.php" method="get">
+    <p>Enter Developer Name to Select Developer:</p>
+    <p><input type="text" name="developername"></p>
     <p>Enter one or more fields to update table</p>
-    <p>New Publisher Name: <input type="text" name="newpublishername"></p>
+    <p>New Developer Name: <input type="text" name="newdevelopername"></p>
     <p>New Location: <input type="text" name="newlocation"></p>
     <p>New Employee Count: <input type="text" name="newemployees"></p>
+    <p>New Publisher Name: <input type="text" name="newpublisher"></p>
     <p><input type="submit" value="Update Publisher Information"></p>
 </form>
 
-<p><a href="publisherlist.php">List Current Publishers</a></p>
-<p><a href="updatepublisher.php">Refresh Table on Current Page</a></p>
+<p><a href="developerlist.php">List Current Developers</a></p>
+<p><a href="updatedeveloper.php">Refresh Table on Current Page</a></p>
 <p><a href="../index.html">Back to Home</a></p>
 </main>
 </body>

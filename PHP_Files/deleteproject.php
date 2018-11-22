@@ -42,7 +42,7 @@
             die("Unable to select database: " . mysql_error());
         $project_name = $_GET['projectname'];
         
-        $query = "DELETE FROM GAME_PROJECT WHERE ProjectName = $project_name";
+        $query = "DELETE FROM GAME_PROJECT WHERE ProjectName = '$project_name'";
 
         $result = mysql_query($query);
         if(!$result)
@@ -56,7 +56,7 @@
     <p><input type="text" name="projectname"></p>
     <p><input type="submit" value="Remove Project From Database"></p>
 </form>
-<p><a href="gameprojectlist.php">List Current Owners</a></p>
+<p><a href="gameprojectlist.php">List Current Projects</a></p>
 <p><a href="deleteproject.php">Refresh Table on Current Page</a></p>
 <p><a href="../index.html">Back to Home</a></p>
 </main>

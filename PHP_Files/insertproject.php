@@ -20,6 +20,9 @@
         $developer_name = $_GET['developername'];
         $start_date = $_GET['startdate'];
         $end_date = $_GET['enddate'];
+        if($end_date == ""){
+            $end_date = null;
+        }
         //Build Query
         $query = "INSERT INTO GAME_PROJECT(ProjectName, DeveloperName, StartDate, EndDate)
         VALUES('$project_name', '$developer_name', '$start_date', '$end_date')";
